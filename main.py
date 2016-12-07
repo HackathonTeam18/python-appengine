@@ -1,9 +1,13 @@
-from flask import Flask
+from flask import Flask, request
 import json
 from flask import jsonify
+from crud import Capital
+import logging
+import utility
 
 
 app = Flask(__name__)
+capital = Capital()
 
 
 @app.route('/')
@@ -19,26 +23,37 @@ def api_status():
 
 @app.route('/api/capitals/<id>', methods=['DELETE'])
 def api_delete(id):
-    data = json.dumps({'insert':'false','fetch':'false', 'delete': 'false',  'list': 'false'})
-    return data
+    capital.delete_capital(id)
+    return "200"
 
 
 @app.route('/api/capitals/<id>', methods=['GET'])
 def api_get(id):
-    data = json.dumps({'insert':'false','fetch':'false', 'delete': 'false',  'list': 'false'})
+    obj = capital.get_capital(id)
+    data = jsonify(obj)
     return data
 
 
 @app.route('/api/capitals/<id>', methods=['PUT'])
 def api_update(id):
-    data = json.dumps({'insert':'false','fetch':'false', 'delete': 'false',  'list': 'false'})
-    return data
+    data = {}
+    returnMessage = ""
+    try:
+        obj = request.get_json()
+
+    except Exception as e:
+        # swallow up exceptions
+        logging.exception('Oops!')
+        return "exception"
+
+    capital.store_capital(id, json.dumps(obj))
+    return jsonify(data), 200
 
 
 @app.route('/api/capitals', methods=['GET'])
 def api_list():
-    data = json.dumps({'insert':'false','fetch':'false', 'delete': 'false',  'list': 'false'})
-    return data
+    data = capital.fetch_capitals()
+    return jsonify(data)
 
 
 if __name__ == '__main__':
