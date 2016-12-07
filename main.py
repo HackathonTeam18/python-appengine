@@ -17,7 +17,7 @@ def hello_world():
 
 @app.route('/api/status')
 def api_status():
-    data = json.dumps({'insert':'false','fetch':'false', 'delete': 'false',  'list': 'false'})
+    data = json.dumps({'insert':'true','fetch':'true', 'delete': 'true',  'list': 'true'})
     return data
 
 
