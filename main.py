@@ -17,21 +17,34 @@ def hello_world():
 
 @app.route('/api/status')
 def api_status():
-    data = json.dumps({'insert':'true','fetch':'true', 'delete': 'true',  'list': 'true'})
-    return data
+    data = {}
+    data['insert'] = True
+    data['fetch'] = True
+    data['delete'] = True
+    data['list'] = True
+    obj = jsonify(data)
+    return obj, 200
 
 
 @app.route('/api/capitals/<id>', methods=['DELETE'])
 def api_delete(id):
-    capital.delete_capital(id)
-    return "200"
+    items = capital.get_capital(id)
+    if len(items) > 0:
+        capital.delete_capital(id)
+        return "success", 200
+    else:
+        return "not found", 404
+
 
 
 @app.route('/api/capitals/<id>', methods=['GET'])
 def api_get(id):
     obj = capital.get_capital(id)
-    data = jsonify(obj)
-    return data
+    if len(obj) > 0:
+        data = jsonify(obj)
+        return data, 200
+    else:
+        return "not found", 404
 
 
 @app.route('/api/capitals/<id>', methods=['PUT'])
@@ -47,13 +60,13 @@ def api_update(id):
         return "exception"
 
     capital.store_capital(id, json.dumps(obj))
-    return jsonify(data), 200
+    return "success", 200
 
 
 @app.route('/api/capitals', methods=['GET'])
 def api_list():
     data = capital.fetch_capitals()
-    return jsonify(data)
+    return jsonify(data), 200
 
 
 if __name__ == '__main__':
