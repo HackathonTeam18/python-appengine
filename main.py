@@ -27,7 +27,7 @@ def api_status():
     data['delete'] = True
     data['list'] = True
     data['query'] = True
-    data['search'] = False
+    data['search'] = True
     data['pubsub'] = True
     data['storage'] = True
     obj = jsonify(data)
@@ -72,8 +72,12 @@ def api_update(id):
 @app.route('/api/capitals', methods=['GET'])
 def api_list():
     query_values = str(request.args.get('query')).split(":")
+    search_value = request.args.get('search')
+    print search_value
     if query_values == ['None']:
         data = capital.fetch_capitals()
+    elif search_value == None:
+        data = capital.fetch_capitals_query("name", search_value)
     else:
         data = capital.fetch_capitals_query(query_values[0], query_values[1])
 
