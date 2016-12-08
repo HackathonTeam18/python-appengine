@@ -92,14 +92,14 @@ def api_publish(id):
         myList = topicName.split("/")
         pubsub_client = pubsub.Client(project = 'the-depot')
         topic = pubsub_client.topic(topicName)
-        data = capitalData[0]['body'].encode('utf-8')
+        data = json.dumps(obj[0]).encode('utf-8')
         message_id = topic.publish(data)
     except Exception as e:
         # swallow up exceptions
         logging.exception('Unexpected error')
         return "Unexpected error", 500
 
-    return "success", 200
+    return Response(response="{\"\messageId: 0\"}", status=200, mimetype="application/json")
 
 
 @app.route('/api/capitals/<id>/store', methods=['POST'])
