@@ -101,7 +101,7 @@ def api_publish(id):
     except Exception as e:
         # swallow up exceptions
         logging.exception('Unexpected error')
-         return Response(response="{\"code\":500,\"message\":\"Unexpected error\"}", status=404, mimetype="application/json")
+        return Response(response="{\"code\":500,\"message\":\"Unexpected error\"}", status=404, mimetype="application/json")
 
     return Response(response="{\"\messageId: "+message_id+"\"}", status=200, mimetype="application/json")
 
