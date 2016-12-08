@@ -4,7 +4,7 @@ from flask import jsonify
 from crud import Capital
 import logging
 import utility
-
+from google.cloud import pubsub
 
 app = Flask(__name__)
 capital = Capital()
@@ -68,6 +68,32 @@ def api_update(id):
 def api_list():
     data = capital.fetch_capitals()
     return jsonify(data), 200
+
+
+#***************************************************Publish Topic********************************************************
+
+@app.route('/api/capitals/<id>/publish', methods=['POST'])
+def api_publish(id):
+    try:
+        obj = request.get_json()
+        topicName = obj['topic']
+
+        capitalData = capital.get_capital(id)
+        if len(capitalData) <= 0:
+            return "Capital record not found", 404
+
+        pubsub_client = pubsub.Client()
+        topic = pubsub_client.topic(topicName)
+        data = capitalData[0]['body'].encode('utf-8')
+        message_id = topic.publish(data)
+    except Exception as e:
+        # swallow up exceptions
+        logging.exception('Unexpected error')
+        return "Unexpected error", 500
+
+    return "success", 200
+
+#************************************************************************************************************************
 
 
 if __name__ == '__main__':
