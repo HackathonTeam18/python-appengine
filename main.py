@@ -81,7 +81,11 @@ def api_list():
     else:
         data = capital.fetch_capitals_query("name", search_value)
 
-    return jsonify(data), 200
+    if len(data) > 0:
+        return jsonify(data), 200
+
+    else:
+        return Response(response="{\"code\":404,\"message\":\"not found\"}", status=404, mimetype="application/json")
 
 
 @app.route('/api/capitals/<id>/publish', methods=['POST'])
