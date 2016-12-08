@@ -89,7 +89,7 @@ def api_list():
 def api_publish(id):
     try:
         obj = request.get_json()
-        logging.info("input = {}" + obj)
+        #logging.info("input = {}" + obj)
         topicName = obj['topic']
         capitalData = capital.get_capital(id)
         if len(capitalData) <= 0:
@@ -97,7 +97,7 @@ def api_publish(id):
         
         myList = topicName.split("/")
         projectIndex = myList.index('projects') + 1
-        logging.info("project index = {}" + projectIndex)
+        #logging.info("project index = {}" + projectIndex)
         projectName = myList[projectIndex]
         pubsub_client = pubsub.Client(project = projectName)
         #pubsub_client = pubsub.Client(project = 'the-depot')
