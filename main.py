@@ -93,7 +93,7 @@ def api_publish(id):
             return "Capital record not found", 404
         
         myList = topicName.split("/")
-        pubsub_client = pubsub.Client(project='the-depot')
+        pubsub_client = pubsub.Client(project = 'the-depot')
         topic = pubsub_client.topic(topicName)
         data = capitalData[0]['body'].encode('utf-8')
         message_id = topic.publish(data)
