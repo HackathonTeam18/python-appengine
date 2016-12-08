@@ -85,7 +85,7 @@ def api_store_capital(id):
         storage.upload_blob(data[0]['body'], str(capital.get_key(id)))
         return jsonify("success"), 200
     else:
-        return jsonify("not found"), 404
+        return "{\"code\":404,\"message\":\"not found\"}", 404
 
 
 @app.errorhandler(500)
