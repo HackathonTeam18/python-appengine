@@ -50,7 +50,7 @@ def api_get(id):
         data = obj[0]['body']
         return data, 200
     else:
-        return "not found", 404
+        return "{\"code\":404,\"message\":\"not found\"}", 404
 
 
 @app.route('/api/capitals/<id>', methods=['PUT'])
