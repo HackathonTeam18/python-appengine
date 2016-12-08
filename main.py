@@ -84,12 +84,12 @@ def api_publish(id):
     try:
         obj = request.get_json()
         topicName = obj['topic']
-        topicName = "https://pubsub.googleapis.com/v1/projects" + topicName
         capitalData = capital.get_capital(id)
         if len(capitalData) <= 0:
             return "Capital record not found", 404
-
-        pubsub_client = pubsub.Client()
+        
+        myList = topicName.split("/")
+        pubsub_client = pubsub.Client(project=myList[1])
         topic = pubsub_client.topic(topicName)
         data = capitalData[0]['body'].encode('utf-8')
         message_id = topic.publish(data)
