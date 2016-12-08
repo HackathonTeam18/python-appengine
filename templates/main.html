@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<title>Capitals of the world</title>
+<center><h1>Capitals known to organizing committee</h1></center>
+<HR>
+<TABLE border="1">
+    <TR>
+        <TH>Country</TH>
+        <TH>Capital</TH>
+    </TR>
+{% if results %}
+    {% for result in results %}
+            <TR>
+                <TD>{{ result.country }}</TD>
+                <TD>{{ result.name }}</TD>
+            </TR>
+    {% endfor %}
+{% endif %}
+</TABLE>
+<BR><BR>
