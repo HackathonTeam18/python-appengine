@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<title>Capitals of the world</title>
+<center><h1>Capitals known to organizing committee</h1></center>
+<HR>
+{% if results %}
+    {% for result in results %}
+        <B>{{ result.name }}</B>
+        <BR> {{ result.comment }} <BR>
+    {% endfor %}
+{% endif %}
+<BR><BR>
