@@ -74,11 +74,10 @@ def api_update(id):
 @app.route('/api/capitals', methods=['GET'])
 def api_list():
     query_values = str(request.args.get('query')).split(":")
-    data = capital.fetch_capitals()
-    #if query_values == ['None']:
-    #    data = capital.fetch_capitals()
-    #else:
-    #    data = capital.fetch_capitals_params(query_values)
+    if query_values == ['None']:
+        data = capital.fetch_capitals()
+    else:
+        data = capital.fetch_capitals_query(query_values[0], query_values[1])
 
     return jsonify(data), 200
 

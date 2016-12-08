@@ -29,6 +29,12 @@ class Capital:
     def fetch_capitals(self):
         query = self.ds.query(kind=self.kind)
         return self.get_query_results(query)
+    
+
+    def fetch_capitals_query(self, prop, val):
+        query = self.ds.query(kind=self.kind)
+        query.add_filter(prop, "=", val)
+        return self.get_query_results(query)
 
     
     def get_query_results(self, query):
