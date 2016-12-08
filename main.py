@@ -26,7 +26,7 @@ def api_status():
     data['fetch'] = True
     data['delete'] = True
     data['list'] = True
-    data['query'] = False
+    data['query'] = True
     data['search'] = False
     data['pubsub'] = True
     data['storage'] = True
