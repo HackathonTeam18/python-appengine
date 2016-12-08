@@ -16,18 +16,31 @@ class Capital:
         return self.ds.key(self.kind, id)
 
 
-    def store_capital(self, uniqueid, body):
+    def store_capital(self, uniqueid, obj):
         key = self.ds.key(self.kind, uniqueid)
         entity = datastore.Entity(key)
 
-        entity['id'] = uniqueid
-        entity['body'] = body
+        entity['id'] = int(uniqueid)
+        entity['location'] = datastore.Entity(key=self.ds.key('EmbeddedKind'))
+        entity['location']['latitude'] = obj['location']['latitude']
+        entity['location']['longitude'] = obj['location']['longitude']
+        entity['country'] = obj['country']
+        entity['name'] = obj['name']
+        entity['countryCode'] = obj['countryCode']
+        entity['continent'] = obj['continent']
+
         key = self.ds.put(entity)
         self.data[id] = key
         return key
 
     def fetch_capitals(self):
         query = self.ds.query(kind=self.kind)
+        return self.get_query_results(query)
+    
+
+    def fetch_capitals_query(self, prop, val):
+        query = self.ds.query(kind=self.kind)
+        query.add_filter(prop, "=", val)
         return self.get_query_results(query)
 
     
@@ -40,21 +53,9 @@ class Capital:
 
     def get_capital(self, id):
         query = self.ds.query(kind=self.kind)
-        query.add_filter('id', '=', id)
+        query.add_filter('id', '=', int(id))
         return self.get_query_results(query)
 
     def delete_capital(self, id):
-        #query = self.ds.query(kind=self.kind)
-        #query.add_filter('id', '=', id)
-        #obj = self.get_query_results(query)
-        #print obj.key()
-        #results = query.fetch()
-        #print "results:"
-        #print results.key()
-        #key = self.ds.key(self.kind)
-        #entity = datastore.Entity(key)
-        #entity['id'] = id
-        #result = self.ds.get(entity)
-        #result.delete()
         key = self.ds.key(self.kind, id)
         self.ds.delete(key)
