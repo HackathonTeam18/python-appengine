@@ -86,15 +86,20 @@ def api_list():
 def api_publish(id):
     try:
         obj = request.get_json()
-        logging.info("input = {}" .obj)
+        logging.info("input = {}" + obj)
         topicName = obj['topic']
         capitalData = capital.get_capital(id)
         if len(capitalData) <= 0:
             return Response(response="{\"code\":404,\"message\":\"Capital record not found\"}", status=404, mimetype="application/json")
         
         myList = topicName.split("/")
-        pubsub_client = pubsub.Client(project = 'the-depot')
+        projectIndex = myList.index('projects') + 1
+        logging.info("project index = {}" + projectIndex)
+        projectName = myList[projectIndex]
+        pubsub_client = pubsub.Client(project = projectName)
+        #pubsub_client = pubsub.Client(project = 'the-depot')
         #topic = pubsub_client.topic(topicName)
+
         topic = pubsub_client.topic(myList[len(myList) - 1])
         data = json.dumps(capitalData[0]).encode('utf-8')
         message_id = topic.publish(data)
