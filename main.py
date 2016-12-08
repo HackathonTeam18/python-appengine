@@ -1,4 +1,4 @@
-from flask import Flask, request, Response
+from flask import Flask, request, Response, render_template
 import json
 from flask import jsonify
 from crud import Capital
@@ -8,16 +8,14 @@ from google.cloud import pubsub
 from storage import Storage
 import urllib2 
 
-
 app = Flask(__name__)
 capital = Capital()
 
-
 @app.route('/')
-def hello_world():
-    """hello world"""
-    return 'Hello World!'
-
+def main_page():
+    results = capital.fetch_capitals()
+    if request.method == 'GET':
+        return render_template('main.html', comment=None, results=results)
 
 @app.route('/api/status')
 def api_status():
