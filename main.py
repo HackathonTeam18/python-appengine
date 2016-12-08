@@ -15,6 +15,7 @@ def hello_world():
     """hello world"""
     return 'Hello World!'
 
+
 @app.route('/api/status')
 def api_status():
     data = {}
