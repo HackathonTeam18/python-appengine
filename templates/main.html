@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <title>Capitals of the world</title>
-<center><h1>Capitals known to organizing committee</h1></center>
+<center><h1>Capitals of the world</h1></center>
 <HR>
 <TABLE border="1">
     <TR>
@@ -8,10 +8,10 @@
         <TH>Capital</TH>
     </TR>
 {% if results %}
-    {% for result in results %}
+    {% for country in results.keys() %}
             <TR>
-                <TD>{{ result.country }}</TD>
-                <TD>{{ result.name }}</TD>
+                <TD>{{ country }}</TD>
+                <TD>{{ results[country] }}</TD>
             </TR>
     {% endfor %}
 {% endif %}

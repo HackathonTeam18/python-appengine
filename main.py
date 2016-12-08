@@ -7,13 +7,18 @@ import utility
 from google.cloud import pubsub
 from storage import Storage
 import urllib2 
+import collections
 
 app = Flask(__name__)
 capital = Capital()
 
 @app.route('/')
 def main_page():
-    results = capital.fetch_capitals()
+    capitals = capital.fetch_capitals()
+    results = collections.OrderedDict()
+    for item in capitals:
+        results[item['country']] = item['name']
+
     if request.method == 'GET':
         return render_template('main.html', comment=None, results=results)
 
@@ -78,8 +83,8 @@ def api_list():
         data = capital.fetch_capitals_query(query_values[0], query_values[1])
     else:
         data = capital.fetch_capitals_query("name", search_value)
-        data.append(capital.fetch_capitals_query("continent", search_value))
-        data.append(capital.fetch_capitals_query("country", search_value))
+        data.extend(capital.fetch_capitals_query("continent", search_value))
+        data.extend(capital.fetch_capitals_query("country", search_value))
         
 
     return jsonify(data), 200
