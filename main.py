@@ -4,6 +4,7 @@ from flask import jsonify
 from crud import Capital
 import logging
 import utility
+from storage import Storage
 
 
 app = Flask(__name__)
@@ -42,7 +43,7 @@ def api_delete(id):
 def api_get(id):
     obj = capital.get_capital(id)
     if len(obj) > 0:
-        data = jsonify(obj)
+        data = jsonify(obj[0])
         return data, 200
     else:
         return "not found", 404
@@ -68,6 +69,28 @@ def api_update(id):
 def api_list():
     data = capital.fetch_capitals()
     return jsonify(data), 200
+
+
+@app.route('/api/capitals/<id>/store', methods=['POST'])
+def api_store_capital(id):
+    data = capital.get_capital(id)
+    if len(data) > 0:
+        obj = request.get_json()
+        bucket_name = obj['bucket']
+        storage = Storage(bucket_name)
+        storage.upload_blob(data[0], str(capital.get_key(id)))
+        return jsonify("success"), 200
+    else:
+        return jsonify("not found"), 404
+
+
+@app.errorhandler(500)
+def server_error(e):
+    logging.exception('An error occurred during a request.')
+    return """
+    An internal error occurred: <pre>{}</pre>
+    See logs for full stacktrace.
+    """.format(e), 500
 
 
 if __name__ == '__main__':
