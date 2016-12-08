@@ -90,6 +90,7 @@ def api_list():
 def api_publish(id):
     try:
         obj = request.get_json()
+        logging.info("input = {}" .obj)
         topicName = obj['topic']
         capitalData = capital.get_capital(id)
         if len(capitalData) <= 0:
@@ -98,7 +99,7 @@ def api_publish(id):
         myList = topicName.split("/")
         pubsub_client = pubsub.Client(project = 'the-depot')
         #topic = pubsub_client.topic(topicName)
-        topic = pubsub_client.topic(myList[myList.length - 1])
+        topic = pubsub_client.topic(myList[len(myList) - 1])
         data = json.dumps(capitalData[0]).encode('utf-8')
         message_id = topic.publish(data)
     except Exception as e:
@@ -106,7 +107,7 @@ def api_publish(id):
         logging.exception('Unexpected error')
         return "Unexpected error", 500
 
-    return Response(response="{\"\messageId: 0\"}", status=200, mimetype="application/json")
+    return Response(response="{\"\messageId: "+message_id+"\"}", status=200, mimetype="application/json")
 
 
 @app.route('/api/capitals/<id>/store', methods=['POST'])
