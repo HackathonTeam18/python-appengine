@@ -73,13 +73,13 @@ def api_update(id):
 def api_list():
     query_values = str(request.args.get('query')).split(":")
     search_value = request.args.get('search')
-    print search_value
-    if query_values == ['None']:
+    print query_values
+    if query_values == ['None'] and search_value == None:
         data = capital.fetch_capitals()
     elif search_value == None:
-        data = capital.fetch_capitals_query("name", search_value)
-    else:
         data = capital.fetch_capitals_query(query_values[0], query_values[1])
+    else:
+        data = capital.fetch_capitals_query("name", search_value)
 
     return jsonify(data), 200
 
