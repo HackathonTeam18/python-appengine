@@ -27,7 +27,7 @@ def api_status():
     data['list'] = True
     data['query'] = False
     data['search'] = False
-    data['pubsub'] = False
+    data['pubsub'] = True
     data['storage'] = True
     obj = jsonify(data)
     return obj, 200
