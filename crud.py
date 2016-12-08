@@ -11,6 +11,11 @@ class Capital:
         self.kind = "PythonCapital"
         self.data = {}
 
+    
+    def get_key(self, id):
+        return self.ds.key(self.kind, id)
+
+
     def store_capital(self, uniqueid, body):
         key = self.ds.key(self.kind, uniqueid)
         entity = datastore.Entity(key)
