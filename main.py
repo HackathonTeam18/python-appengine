@@ -6,6 +6,7 @@ import logging
 import utility
 from google.cloud import pubsub
 from storage import Storage
+import urllib2 
 
 
 app = Flask(__name__)
@@ -72,7 +73,9 @@ def api_update(id):
 
 @app.route('/api/capitals', methods=['GET'])
 def api_list():
-    data = capital.fetch_capitals()
+    query_values = str(request.args.get('query')).split(":")
+    print query_values
+    data = capital.fetch_capitals(query_values)
     return jsonify(data), 200
 
 
@@ -100,15 +103,22 @@ def api_publish(id):
 
 @app.route('/api/capitals/<id>/store', methods=['POST'])
 def api_store_capital(id):
-    data = capital.get_capital(id)
-    if len(data) > 0:
-        obj = request.get_json()
-        bucket_name = obj['bucket']
-        storage = Storage(bucket_name)
-        storage.upload_blob(data[0]['body'], str(capital.get_key(id)))
-        return jsonify("success"), 200
-    else:
-        return "{\"code\":404,\"message\":\"not found\"}", 404
+    try:
+        data = capital.get_capital(id)
+        if len(data) > 0:
+            obj = request.get_json()
+            bucket_name = obj['bucket']
+            logging.info("bucket name is {}".format(bucket_name))
+            storage = Storage(bucket_name)
+            print data
+            storage.upload_blob(data[0]['body'], str(capital.get_key(id)))
+            return jsonify("success"), 200
+        else:
+            return Response(response="{\"code\":404,\"message\":\"not found\"}", status=404, mimetype="application/json")
+
+            #except urllib2.HTTPError, err:
+    except Exception as err:
+        return Response(response="{\"code\":500,\"message\":\"Unexpected error\"}", status=500, mimetype="application/json")
 
 
 @app.errorhandler(500)
