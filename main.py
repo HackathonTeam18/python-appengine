@@ -74,8 +74,12 @@ def api_update(id):
 @app.route('/api/capitals', methods=['GET'])
 def api_list():
     query_values = str(request.args.get('query')).split(":")
-    print query_values
-    data = capital.fetch_capitals(query_values)
+    data = capital.fetch_capitals()
+    #if query_values == ['None']:
+    #    data = capital.fetch_capitals()
+    #else:
+    #    data = capital.fetch_capitals_params(query_values)
+
     return jsonify(data), 200
 
 
@@ -111,7 +115,7 @@ def api_store_capital(id):
             logging.info("bucket name is {}".format(bucket_name))
             storage = Storage(bucket_name)
             print data
-            storage.upload_blob(data[0]['body'], str(capital.get_key(id)))
+            storage.upload_blob(data[0]['body'], str(id))
             return jsonify("success"), 200
         else:
             return Response(response="{\"code\":404,\"message\":\"not found\"}", status=404, mimetype="application/json")
