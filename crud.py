@@ -35,6 +35,7 @@ class Capital:
 
     def fetch_capitals(self):
         query = self.ds.query(kind=self.kind)
+        query.order = ['country']
         return self.get_query_results(query)
     
 
