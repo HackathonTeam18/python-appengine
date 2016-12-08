@@ -93,7 +93,7 @@ def api_publish(id):
         topicName = obj['topic']
         capitalData = capital.get_capital(id)
         if len(capitalData) <= 0:
-            return "Capital record not found", 404
+            return Response(response="{\"code\":404,\"message\":\"Capital record not found\"}", status=404, mimetype="application/json")
         
         myList = topicName.split("/")
         pubsub_client = pubsub.Client(project = 'the-depot')
@@ -104,7 +104,7 @@ def api_publish(id):
     except Exception as e:
         # swallow up exceptions
         logging.exception('Unexpected error')
-        return "Unexpected error", 500
+        return Response(response="{\"code\":500,\"message\":\"Unexpected error\"}", status=404, mimetype="application/json")
 
     return Response(response="{\"\messageId: "+message_id+"\"}", status=200, mimetype="application/json")
 
