@@ -25,7 +25,7 @@ def api_status():
     data['delete'] = True
     data['list'] = True
     data['query'] = True
-    data['search'] = False
+    data['search'] = True
     data['pubsub'] = True
     data['storage'] = True
     obj = jsonify(data)
@@ -70,12 +70,20 @@ def api_update(id):
 @app.route('/api/capitals', methods=['GET'])
 def api_list():
     query_values = str(request.args.get('query')).split(":")
-    if query_values == ['None']:
+    search_value = request.args.get('search')
+    print query_values
+    if query_values == ['None'] and search_value == None:
         data = capital.fetch_capitals()
-    else:
+    elif search_value == None:
         data = capital.fetch_capitals_query(query_values[0], query_values[1])
+    else:
+        data = capital.fetch_capitals_query("name", search_value)
 
-    return jsonify(data), 200
+    if len(data) > 0:
+        return jsonify(data), 200
+
+    else:
+        return Response(response="{\"code\":404,\"message\":\"not found\"}", status=404, mimetype="application/json")
 
 
 @app.route('/api/capitals/<id>/publish', methods=['POST'])
@@ -89,8 +97,9 @@ def api_publish(id):
         
         myList = topicName.split("/")
         pubsub_client = pubsub.Client(project = 'the-depot')
-        topic = pubsub_client.topic(topicName)
-        data = json.dumps(obj[0]).encode('utf-8')
+        #topic = pubsub_client.topic(topicName)
+        topic = pubsub_client.topic(myList[myList.length - 1])
+        data = json.dumps(capitalData[0]).encode('utf-8')
         message_id = topic.publish(data)
     except Exception as e:
         # swallow up exceptions
