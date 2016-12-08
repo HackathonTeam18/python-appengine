@@ -47,7 +47,7 @@ def api_delete(id):
 def api_get(id):
     obj = capital.get_capital(id)
     if len(obj) > 0:
-        data = jsonify(obj[0])
+        data = obj[0]['body']
         return data, 200
     else:
         return "not found", 404
@@ -82,7 +82,7 @@ def api_store_capital(id):
         obj = request.get_json()
         bucket_name = obj['bucket']
         storage = Storage(bucket_name)
-        storage.upload_blob(data[0], str(capital.get_key(id)))
+        storage.upload_blob(data[0]['body'], str(capital.get_key(id)))
         return jsonify("success"), 200
     else:
         return jsonify("not found"), 404
