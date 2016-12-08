@@ -81,7 +81,7 @@ def api_publish(id):
     try:
         obj = request.get_json()
         topicName = obj['topic']
-
+        topicName = "https://pubsub.googleapis.com/v1/projects" + topicName
         capitalData = capital.get_capital(id)
         if len(capitalData) <= 0:
             return "Capital record not found", 404
