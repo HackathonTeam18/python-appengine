@@ -44,13 +44,11 @@ def api_delete(id):
         return "not found", 404
 
 
-
 @app.route('/api/capitals/<id>', methods=['GET'])
 def api_get(id):
     obj = capital.get_capital(id)
-    if len(obj) > 0:
-        data = obj[0]['body']
-        return Response(response=data, status=200, mimetype="application/json")
+    if len(obj) > 0:        
+        return Response(response=json.dumps(obj[0]), status=200, mimetype="application/json")
     else:
         return Response(response="{\"code\":404,\"message\":\"not found\"}", status=404, mimetype="application/json")
 
@@ -67,7 +65,7 @@ def api_update(id):
         logging.exception('Oops!')
         return "exception"
 
-    capital.store_capital(id, json.dumps(obj))
+    capital.store_capital(id, obj)
     return "success", 200
 
 
