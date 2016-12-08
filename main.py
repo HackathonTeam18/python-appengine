@@ -99,7 +99,8 @@ def api_publish(id):
         
         myList = topicName.split("/")
         pubsub_client = pubsub.Client(project = 'the-depot')
-        topic = pubsub_client.topic(topicName)
+        #topic = pubsub_client.topic(topicName)
+        topic = pubsub_client.topic(myList[myList.length - 1])
         data = json.dumps(capitalData[0]).encode('utf-8')
         message_id = topic.publish(data)
     except Exception as e:
