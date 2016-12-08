@@ -4,12 +4,9 @@ from flask import jsonify
 from crud import Capital
 import logging
 import utility
-<<<<<<< HEAD
 from google.cloud import pubsub
-=======
 from storage import Storage
 
->>>>>>> 4ad127859fbb0c871ce55ab53e2c69ec50596907
 
 app = Flask(__name__)
 capital = Capital()
@@ -79,9 +76,6 @@ def api_list():
     return jsonify(data), 200
 
 
-<<<<<<< HEAD
-#***************************************************Publish Topic********************************************************
-
 @app.route('/api/capitals/<id>/publish', methods=['POST'])
 def api_publish(id):
     try:
@@ -103,8 +97,7 @@ def api_publish(id):
 
     return "success", 200
 
-#************************************************************************************************************************
-=======
+
 @app.route('/api/capitals/<id>/store', methods=['POST'])
 def api_store_capital(id):
     data = capital.get_capital(id)
@@ -125,7 +118,6 @@ def server_error(e):
     An internal error occurred: <pre>{}</pre>
     See logs for full stacktrace.
     """.format(e), 500
->>>>>>> 4ad127859fbb0c871ce55ab53e2c69ec50596907
 
 
 if __name__ == '__main__':
