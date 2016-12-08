@@ -24,6 +24,10 @@ def api_status():
     data['fetch'] = True
     data['delete'] = True
     data['list'] = True
+    data['query'] = False
+    data['search'] = False
+    data['pubsub'] = False
+    data['storage'] = True
     obj = jsonify(data)
     return obj, 200
 
