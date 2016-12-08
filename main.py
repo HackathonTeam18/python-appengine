@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, Response
 import json
 from flask import jsonify
 from crud import Capital
@@ -49,9 +49,9 @@ def api_get(id):
     obj = capital.get_capital(id)
     if len(obj) > 0:
         data = obj[0]['body']
-        return data, 200
+        return Response(response=data, status=200, mimetype="application/json")
     else:
-        return "{\"code\":404,\"message\":\"not found\"}", 404
+        return Response(response="{\"code\":404,\"message\":\"not found\"}", status=404, mimetype="application/json")
 
 
 @app.route('/api/capitals/<id>', methods=['PUT'])
