@@ -37,15 +37,13 @@ class Capital:
         query = self.ds.query(kind=self.kind)
         return self.get_query_results(query)
 
-    def fetch_capitals(self, restrictions):
-        query = self.ds.query(kind=self.kind)
-        return self.get_query_results(query)
-
+    
     def get_query_results(self, query):
         results = list()
         for entity in list(query.fetch()):
             results.append(dict(entity))
         return results
+
 
     def get_capital(self, id):
         query = self.ds.query(kind=self.kind)
