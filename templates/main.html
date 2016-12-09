@@ -1,7 +1,19 @@
 <!DOCTYPE html>
 <title>Capitals of the world</title>
-<center><h1>Capitals of the world</h1></center>
-<HR>
+<style type="text/css">
+    .odd { 
+        background-color:skyblue;
+    }
+    .even {
+        background-color:white;
+    }
+    .header {
+        background-color:seagreen;
+        color:white;
+    }
+</style>
+<center><img src="/static/world.png" width="50"><font size=24>Capitals of the world</font><img src="/static/world.png" width="50"></center>
+<hr>
 <form action="/" method="post">
     <p>
         Search country:
@@ -10,18 +22,18 @@
     </p>
     <p><input type="submit" value="Submit"></p>
 </form>
-<TABLE border="1">
-    <TR>
-        <TH>Country</TH>
-        <TH>Capital</TH>
-    </TR>
+<table border="1">
+    <tr class="header">
+        <th>Country</th>
+        <th>Capital</th>
+    </tr>
 {% if results %}
     {% for country in results.keys() %}
-            <TR>
-                <TD>{{ country }}</TD>
-                <TD>{{ results[country] }}</TD>
-            </TR>
+            <tr class="{{ loop.cycle('odd', 'even') }}">
+                <td>{{ country }}</td>
+                <td>{{ results[country] }}</td>
+            </tr>
     {% endfor %}
 {% endif %}
-</TABLE>
-<BR><BR>
+</table>
+<br><br>
