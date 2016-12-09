@@ -101,33 +101,28 @@ def api_list():
 def api_publish(id):
     try:
         obj = request.get_json()
-        logging.info("input = {}" .format(obj))
+
         topicName = obj['topic']
         capitalData = capital.get_capital(id)
+        
         if len(capitalData) <= 0:
             return Response(response="{\"code\":404,\"message\":\"Capital record not found\"}", status=404, mimetype="application/json")
         
         myList = topicName.split("/")
-        projectIndex = myList.index('projects') + 1
-        logging.info("project index = {}" + projectIndex)
-        projectName = myList[projectIndex]
         
-        pubsub_client = pubsub.Client(project = projectName)
-        #pubsub_client = pubsub.Client()
-        #pubsub_client = pubsub.Client(project = 'the-depot')
-        #topic = pubsub_client.topic(topicName)
+        pubsub_client = pubsub.Client(project = myList[1])
+        topic = pubsub_client.topic(myList[3])
 
-        topic = pubsub_client.topic(myList[len(myList) - 1])
-        data = json.dumps(capitalData[0]).encode('utf-8')
+        message = json.dumps(capitalData[0])
+        data = message.encode('utf-8')
+
         message_id = topic.publish(data)
+        return Response(response="{\"messageId\": "+ str(message_id) +"}", status=200, mimetype="application/json")
+
     except Exception as e:
         # swallow up exceptions
         logging.exception('Unexpected error')
         return Response(response="{\"code\":500,\"message\":\"Unexpected error\"}", status=500, mimetype="application/json")
-    
-    logging.info('message id: {}' .format(message_id))
-    result = "messageId: {}" .format(message_id)
-    return Response(response=result, status=200, mimetype="application/json")
 
 
 @app.route('/api/capitals/<id>/store', methods=['POST'])
