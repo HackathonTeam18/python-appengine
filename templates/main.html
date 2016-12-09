@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <title>Capitals of the world</title>
+<script src="http://maps.google.com/maps/api/js?key=AIzaSyCRg3ryY3-jOE4N-Wdm4hxpHW1D0_MdSKc&sensor=false" type="text/javascript">
+</script>
 <style type="text/css">
     .odd { 
         background-color:skyblue;
@@ -22,18 +24,60 @@
     </p>
     <p><input type="submit" value="Submit"></p>
 </form>
-<table border="1">
-    <tr class="header">
-        <th>Country</th>
-        <th>Capital</th>
+<table>
+    <tr>
+        <td valign=top>
+            <table border="1">
+                <tr class="header">
+                    <th>Country</th>
+                    <th>Capital</th>
+                </tr>
+                {% if results %}
+                    {% for country in results.keys() %}
+                        <tr class="{{ loop.cycle('odd', 'even') }}">
+                            <td>{{ country }}</td>
+                            <td>{{ results[country].name }}</td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </table>
+        </td>
+        <td valign=top>
+            <div id="map" style="width: 800px; height: 800px;"></div>
+            <script type="text/javascript">
+                var locations = [];
+                {% if results %}
+                    {% for item in results.values() %}
+                        locations.push(["{{item.name}}",{{item.lat}} ,{{item.long}}, {{item.id}}]);
+                    {% endfor %}
+                {% endif %}
+
+                var map = new google.maps.Map(document.getElementById('map'), 
+                {
+                    zoom: 2,
+                    center: new google.maps.LatLng(29.7604, -95.3698)
+                });
+
+                var infowindow = new google.maps.InfoWindow();
+                var marker, i;
+
+                for (i = 0; i < locations.length; i++) 
+                {  
+                    marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+                    map: map
+                    });
+
+                    google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                    return function() 
+                    {
+                        infowindow.setContent(locations[i][0]);
+                        infowindow.open(map, marker);
+                    }
+                    })(marker, i));
+                }
+            </script>
+        </td>
     </tr>
-{% if results %}
-    {% for country in results.keys() %}
-            <tr class="{{ loop.cycle('odd', 'even') }}">
-                <td>{{ country }}</td>
-                <td>{{ results[country] }}</td>
-            </tr>
-    {% endfor %}
-{% endif %}
 </table>
 <br><br>

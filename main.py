@@ -25,7 +25,13 @@ def main_page():
     
     results = collections.OrderedDict()
     for item in capitals:
-        results[item['country']] = item['name']
+        city = {}
+        city['lat'] = item['location']['latitude']
+        city['long'] = item['location']['longitude']
+        city['id'] = item['id']
+        city['country'] = item['country']
+        city['name'] = item['name']
+        results[item['country']] = city
 
     return render_template('main.html', comment=None, results=results)
 
