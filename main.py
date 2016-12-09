@@ -29,6 +29,27 @@ def main_page():
 
     return render_template('main.html', comment=None, results=results)
 
+
+@app.route('/maps')
+def show_maps():
+    capitals = capital.fetch_capitals()
+    if len(capitals) > 0:
+        params = []
+        for item in capitals:
+            city = {}
+            city['lat'] = item['location']['latitude']
+            city['long'] = item['location']['longitude']
+            city['id'] = item['id']
+            city['country'] = item['country']
+            city['name'] = item['name']
+
+            params.append(city)
+            
+        return render_template('maps.html', params=params)
+    else:
+        return "not found"
+
+
 @app.route('/api/status')
 def api_status():
     data = {}
