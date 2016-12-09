@@ -12,15 +12,22 @@ import collections
 app = Flask(__name__)
 capital = Capital()
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def main_page():
-    capitals = capital.fetch_capitals()
+    if request.method == 'GET':
+        capitals = capital.fetch_capitals()
+    elif request.method == 'POST':
+        search_value = request.form['name']
+        if search_value == '':
+            capitals = capital.fetch_capitals()
+        else:
+            capitals = capital.fetch_capitals_query('country', search_value)
+    
     results = collections.OrderedDict()
     for item in capitals:
         results[item['country']] = item['name']
 
-    if request.method == 'GET':
-        return render_template('main.html', comment=None, results=results)
+    return render_template('main.html', comment=None, results=results)
 
 @app.route('/api/status')
 def api_status():
